@@ -13,8 +13,12 @@ class MainAppBar extends StatelessWidget {
     return SliverAppBar(
       backgroundColor: primaryColor,
       expandedHeight: 500,
-      flexibleSpace: FlexibleSpaceBar(
-        background: SafeArea(
+      flexibleSpace: SafeArea(
+        child: Container(
+          margin: const EdgeInsets.only(
+            // kToolbarHeight AppBar사이즈 만큼 알 수 있다.
+            top: kToolbarHeight,
+          ),
           child: Column(
             children: [
               Text(
@@ -45,17 +49,17 @@ class MainAppBar extends StatelessWidget {
                 '보통',
                 style: ts.copyWith(
                   fontSize: 40.0,
-                  fontWeight: FontWeight.w700,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
               const SizedBox(
                 height: 8.0,
               ),
               Text(
-                '나쁘지 않네요',
+                '나쁘지 않습니다',
                 style: ts.copyWith(
                   fontSize: 20.0,
-                  fontWeight: FontWeight.w700,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
             ],

@@ -1,4 +1,5 @@
 import 'package:fine_dust/component/main_app_bar.dart';
+import 'package:fine_dust/component/main_drawer.dart';
 import 'package:fine_dust/const/colors.dart';
 import 'package:flutter/material.dart';
 
@@ -10,6 +11,7 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return const Scaffold(
       backgroundColor: primaryColor,
+      drawer: MainDrawerScreen(),
       body: CustomScrollView(
         slivers: [
           MainAppBar(),
