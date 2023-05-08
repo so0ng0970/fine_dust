@@ -126,3 +126,4 @@ app.*.symbols
 
 web/
 macos/
+data.dart
