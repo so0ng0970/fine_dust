@@ -1,8 +1,12 @@
-import 'package:fine_dust/const/colors.dart';
+import 'package:fine_dust/model/stat_model.dart';
+import 'package:fine_dust/model/status_model.dart';
 import 'package:flutter/material.dart';
 
 class MainAppBar extends StatelessWidget {
-  const MainAppBar({super.key});
+  final statusModel status;
+  final StatModel stat;
+
+  const MainAppBar({required this.stat, required this.status, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -11,7 +15,7 @@ class MainAppBar extends StatelessWidget {
       fontSize: 30.0,
     );
     return SliverAppBar(
-      backgroundColor: primaryColor,
+      backgroundColor: status.primaryColor,
       expandedHeight: 500,
       flexibleSpace: SafeArea(
         child: Container(
@@ -29,7 +33,7 @@ class MainAppBar extends StatelessWidget {
                 ),
               ),
               Text(
-                DateTime.now().toString(),
+                getTimeFromDateTime(dateTime: stat.dataTime).toString(),
                 style: ts.copyWith(
                   fontSize: 20.0,
                   fontWeight: FontWeight.bold,
@@ -39,14 +43,14 @@ class MainAppBar extends StatelessWidget {
                 height: 20.0,
               ),
               Image.asset(
-                'asset/image/mediocre.png',
+                status.imagePath,
                 width: MediaQuery.of(context).size.width / 2,
               ),
               const SizedBox(
                 height: 20.0,
               ),
               Text(
-                '보통',
+                status.label,
                 style: ts.copyWith(
                   fontSize: 40.0,
                   fontWeight: FontWeight.bold,
@@ -56,7 +60,7 @@ class MainAppBar extends StatelessWidget {
                 height: 8.0,
               ),
               Text(
-                '나쁘지 않습니다',
+                status.comment,
                 style: ts.copyWith(
                   fontSize: 20.0,
                   fontWeight: FontWeight.bold,
@@ -67,5 +71,13 @@ class MainAppBar extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  getTimeFromDateTime({required DateTime dateTime}) {
+    return '${dateTime.year}-${getTimeFormat(dateTime.month)}-${getTimeFormat(dateTime.day)} ${getTimeFormat(dateTime.hour)}:${getTimeFormat(dateTime.minute)}';
+  }
+
+  String getTimeFormat(int number) {
+    return number.toString().padLeft(2, '0');
   }
 }

@@ -75,7 +75,7 @@
 import 'package:fine_dust/model/status_model.dart';
 import 'package:flutter/material.dart';
 
-final statusLevels = [
+final statusLevel = [
   statusModel(
       level: 0,
       label: '최고등급',
