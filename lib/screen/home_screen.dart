@@ -1,12 +1,14 @@
-import 'package:fine_dust/component/category_card.dart';
-import 'package:fine_dust/component/hourly_card.dart';
-import 'package:fine_dust/component/main_app_bar.dart';
 import 'package:fine_dust/component/main_drawer.dart';
 import 'package:fine_dust/const/colors.dart';
+import 'package:fine_dust/const/regions.dart';
 import 'package:fine_dust/model/stat_model.dart';
 import 'package:fine_dust/repository/stat_repository.dart';
-import 'package:fine_dust/utils/data_utils.dart';
 import 'package:flutter/material.dart';
+
+import '../component/category_card.dart';
+import '../component/hourly_card.dart';
+import '../component/main_app_bar.dart';
+import '../utils/data_utils.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -16,6 +18,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  String region = regions[0];
   Future<List<StatModel>> fetchData() async {
     final statModels = await StatRepository.fetchData();
 
@@ -26,7 +29,14 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: primaryColor,
-      drawer: const MainDrawerScreen(),
+      drawer: MainDrawerScreen(
+          selectedRegion: region,
+          onRegionTap: (String region) {
+            setState(() {
+              this.region = region;
+              Navigator.of(context).pop();
+            });
+          }),
       body: FutureBuilder<List<StatModel>>(
         future: fetchData(),
         builder: (context, snapshot) {
@@ -52,6 +62,7 @@ class _HomeScreenState extends State<HomeScreen> {
           return CustomScrollView(
             slivers: [
               MainAppBar(
+                region: region,
                 stat: recentStat,
                 status: status,
               ),
