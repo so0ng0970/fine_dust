@@ -1,5 +1,6 @@
 import 'package:fine_dust/model/stat_model.dart';
 import 'package:fine_dust/model/status_model.dart';
+import 'package:fine_dust/utils/data_utils.dart';
 import 'package:flutter/material.dart';
 
 class MainAppBar extends StatelessWidget {
@@ -33,7 +34,8 @@ class MainAppBar extends StatelessWidget {
                 ),
               ),
               Text(
-                getTimeFromDateTime(dateTime: stat.dataTime).toString(),
+                DataUtils.getTimeFromDateTime(dateTime: stat.dataTime)
+                    .toString(),
                 style: ts.copyWith(
                   fontSize: 20.0,
                   fontWeight: FontWeight.bold,
@@ -71,13 +73,5 @@ class MainAppBar extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  getTimeFromDateTime({required DateTime dateTime}) {
-    return '${dateTime.year}-${getTimeFormat(dateTime.month)}-${getTimeFormat(dateTime.day)} ${getTimeFormat(dateTime.hour)}:${getTimeFormat(dateTime.minute)}';
-  }
-
-  String getTimeFormat(int number) {
-    return number.toString().padLeft(2, '0');
   }
 }

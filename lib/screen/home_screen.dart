@@ -3,9 +3,9 @@ import 'package:fine_dust/component/hourly_card.dart';
 import 'package:fine_dust/component/main_app_bar.dart';
 import 'package:fine_dust/component/main_drawer.dart';
 import 'package:fine_dust/const/colors.dart';
-import 'package:fine_dust/const/status_level.dart';
 import 'package:fine_dust/model/stat_model.dart';
 import 'package:fine_dust/repository/stat_repository.dart';
+import 'package:fine_dust/utils/data_utils.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -46,9 +46,9 @@ class _HomeScreenState extends State<HomeScreen> {
           StatModel recentStat = stats[0];
           // 1 - 5 , 6 - 10 , 11 - 15
           // 7
-          final status =
-              statusLevel.where((e) => e.minFineDust < recentStat.seoul).last;
-          print(status);
+          final status = DataUtils.getStatusFromItemCodeAndValue(
+              itemCode: ItemCode.PM10, value: recentStat.seoul);
+
           return CustomScrollView(
             slivers: [
               MainAppBar(
