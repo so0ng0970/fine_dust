@@ -24,7 +24,7 @@ class DataUtils {
     }
   }
 
-  static String itemCodeKrString({
+  static String getItemCodeKrString({
     required ItemCode itemcode,
   }) {
     switch (itemcode) {

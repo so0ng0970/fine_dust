@@ -1,6 +1,7 @@
 import 'package:fine_dust/component/main_drawer.dart';
 import 'package:fine_dust/const/colors.dart';
 import 'package:fine_dust/const/regions.dart';
+import 'package:fine_dust/model/stat_and_status_model.dart';
 import 'package:fine_dust/model/stat_model.dart';
 import 'package:fine_dust/repository/stat_repository.dart';
 import 'package:flutter/material.dart';
@@ -76,6 +77,19 @@ class _HomeScreenState extends State<HomeScreen> {
           final status = DataUtils.getStatusFromItemCodeAndValue(
               itemCode: ItemCode.PM10, value: pm10RecentStat.seoul);
 
+          final ssModel = stats.keys.map((key) {
+            final value = stats[key]!;
+            // 첫번째 통계
+            final stat = value[0];
+            return StatAndStatusModel(
+              itemCode: key,
+              status: DataUtils.getStatusFromItemCodeAndValue(
+                value: stat.getLevelFromRegion(region),
+                itemCode: key,
+              ),
+              stat: stat,
+            );
+          }).toList();
           return CustomScrollView(
             slivers: [
               MainAppBar(
@@ -86,12 +100,12 @@ class _HomeScreenState extends State<HomeScreen> {
               SliverToBoxAdapter(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: const [
-                    CategoryCard(),
-                    SizedBox(
+                  children: [
+                    CategoryCard(models: ssModel, region: region),
+                    const SizedBox(
                       height: 16.0,
                     ),
-                    HourlyCard(),
+                    const HourlyCard(),
                   ],
                 ),
               )

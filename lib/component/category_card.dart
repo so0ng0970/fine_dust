@@ -1,10 +1,18 @@
 import 'package:fine_dust/component/card_title.dart';
 import 'package:fine_dust/component/main_card.dart';
 import 'package:fine_dust/component/main_stat.dart';
+import 'package:fine_dust/model/stat_and_status_model.dart';
+import 'package:fine_dust/utils/data_utils.dart';
 import 'package:flutter/material.dart';
 
 class CategoryCard extends StatelessWidget {
-  const CategoryCard({super.key});
+  final String region;
+  final List<StatAndStatusModel> models;
+  const CategoryCard({
+    required this.models,
+    required this.region,
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -22,15 +30,31 @@ class CategoryCard extends StatelessWidget {
                     scrollDirection: Axis.horizontal,
                     // 조금만 넘겨도 다음페이지 보여줌
                     physics: const PageScrollPhysics(),
-                    children: List.generate(
-                      15,
-                      (index) => MainStat(
-                          width: constraint.maxWidth / 3,
-                          category: '미세먼지 ${index + 1}',
-                          imgPath: 'asset/image/best.png',
-                          level: '최고',
-                          stat: '0㎍/㎥'),
-                    ),
+                    children: models
+                        .map(
+                          (model) => MainStat(
+                            width: constraint.maxWidth / 3,
+                            category: DataUtils.getItemCodeKrString(
+                                itemcode: model.itemCode),
+                            imgPath: model.status.imagePath,
+                            level: model.status.label,
+                            stat: '${model.stat.getLevelFromRegion(
+                              region,
+                            )} ${DataUtils.getUnitFromItemCode(
+                              itemcode: model.itemCode,
+                            )}',
+                          ),
+                        )
+                        .toList(),
+                    // List.generate(
+                    //   15,
+                    //   (index) => MainStat(
+                    //       width: constraint.maxWidth / 3,
+                    //       category: '미세먼지 ${index + 1}',
+                    //       imgPath: 'asset/image/best.png',
+                    //       level: '최고',
+                    //       stat: '0㎍/㎥'),
+                    // ),
                   ),
                 )
               ],
