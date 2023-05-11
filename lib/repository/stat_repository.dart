@@ -3,7 +3,7 @@ import 'package:fine_dust/const/data.dart';
 import 'package:fine_dust/model/stat_model.dart';
 
 class StatRepository {
-  static Future<List<StatModel>> fetchData() async {
+  static Future<List<StatModel>> fetchData({required ItemCode itemCode}) async {
     final response = await Dio().get(
       dataUrl,
       queryParameters: {
@@ -11,7 +11,7 @@ class StatRepository {
         'returnType': 'json',
         'numOfRows': 30,
         'pageNo': 1,
-        'itemCode': 'PM10',
+        'itemCode': itemCode.name,
         'dataGubun': 'HOUR',
         'searchCondition': 'WEEK'
       },
