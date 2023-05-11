@@ -21,11 +21,22 @@ class _HomeScreenState extends State<HomeScreen> {
   String region = regions[0];
   Future<Map<ItemCode, List<StatModel>>> fetchData() async {
     Map<ItemCode, List<StatModel>> stats = {};
+
+    List<Future> futures = [];
+
     for (ItemCode itemCode in ItemCode.values) {
-      final statModels = await StatRepository.fetchData(itemCode: itemCode);
-      stats.addAll({
-        itemCode: statModels,
-      });
+      futures.add(
+        StatRepository.fetchData(
+          itemCode: itemCode,
+        ),
+      );
+    }
+    // 한번에 기다릴 수 있음
+    final results = await Future.wait(futures);
+    for (int i = 0; i < results.length; i++) {
+      final key = ItemCode.values[i];
+      final value = results[i];
+      stats.addAll({key: value});
     }
     return stats;
   }
@@ -59,7 +70,7 @@ class _HomeScreenState extends State<HomeScreen> {
           }
           Map<ItemCode, List<StatModel>> stats = snapshot.data!;
           StatModel pm10RecentStat = stats[ItemCode.PM10]![0];
-          
+
           // 1 - 5 , 6 - 10 , 11 - 15
           // 7
           final status = DataUtils.getStatusFromItemCodeAndValue(
