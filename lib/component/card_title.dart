@@ -1,16 +1,17 @@
-import 'package:fine_dust/const/colors.dart';
 import 'package:flutter/material.dart';
 
 class CardTitle extends StatelessWidget {
   final String title;
-  const CardTitle({required this.title, super.key});
+  final Color backgroundColor;
+  const CardTitle(
+      {required this.title, required this.backgroundColor, super.key});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: const BoxDecoration(
-        color: darkColor,
-        borderRadius: BorderRadius.only(
+      decoration: BoxDecoration(
+        color: backgroundColor,
+        borderRadius: const BorderRadius.only(
           topLeft: Radius.circular(
             16.0,
           ),

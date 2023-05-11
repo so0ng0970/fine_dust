@@ -1,5 +1,4 @@
 import 'package:fine_dust/component/main_drawer.dart';
-import 'package:fine_dust/const/colors.dart';
 import 'package:fine_dust/const/regions.dart';
 import 'package:fine_dust/model/stat_and_status_model.dart';
 import 'package:fine_dust/model/stat_model.dart';
@@ -45,7 +44,6 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: primaryColor,
       drawer: MainDrawerScreen(
           selectedRegion: region,
           onRegionTap: (String region) {
@@ -74,8 +72,11 @@ class _HomeScreenState extends State<HomeScreen> {
 
           // 1 - 5 , 6 - 10 , 11 - 15
           // 7
+          // 미세먼지 최근 데이터의 현재 상
           final status = DataUtils.getStatusFromItemCodeAndValue(
-              itemCode: ItemCode.PM10, value: pm10RecentStat.seoul);
+            itemCode: ItemCode.PM10,
+            value: pm10RecentStat.seoul,
+          );
 
           final ssModel = stats.keys.map((key) {
             final value = stats[key]!;
@@ -90,26 +91,37 @@ class _HomeScreenState extends State<HomeScreen> {
               stat: stat,
             );
           }).toList();
-          return CustomScrollView(
-            slivers: [
-              MainAppBar(
-                region: region,
-                stat: pm10RecentStat,
-                status: status,
-              ),
-              SliverToBoxAdapter(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    CategoryCard(models: ssModel, region: region),
-                    const SizedBox(
-                      height: 16.0,
-                    ),
-                    const HourlyCard(),
-                  ],
+          return Container(
+            color: status.primaryColor,
+            child: CustomScrollView(
+              slivers: [
+                MainAppBar(
+                  region: region,
+                  stat: pm10RecentStat,
+                  status: status,
                 ),
-              )
-            ],
+                SliverToBoxAdapter(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      CategoryCard(
+                        models: ssModel,
+                        region: region,
+                        darkColor: status.darkColor,
+                        lightColor: status.lightColor,
+                      ),
+                      const SizedBox(
+                        height: 16.0,
+                      ),
+                      HourlyCard(
+                        darkColor: status.darkColor,
+                        lightColor: status.lightColor,
+                      ),
+                    ],
+                  ),
+                )
+              ],
+            ),
           );
         },
       ),
