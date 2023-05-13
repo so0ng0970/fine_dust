@@ -22,7 +22,7 @@ class statusModel {
 // 이모티콘 이미지
   final String imagePath;
 
-// 코멘트
+// 코멘트 
   final String comment;
 
 // 미세먼지 최소치
