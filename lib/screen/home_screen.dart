@@ -7,6 +7,7 @@ import 'package:fine_dust/model/stat_and_status_model.dart';
 import 'package:fine_dust/model/stat_model.dart';
 import 'package:fine_dust/repository/stat_repository.dart';
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
 import '../utils/data_utils.dart';
 
@@ -35,8 +36,6 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<Map<ItemCode, List<StatModel>>> fetchData() async {
-    Map<ItemCode, List<StatModel>> stats = {};
-
     List<Future> futures = [];
 
     for (ItemCode itemCode in ItemCode.values) {
@@ -48,12 +47,29 @@ class _HomeScreenState extends State<HomeScreen> {
     }
     // 한번에 기다릴 수 있음
     final results = await Future.wait(futures);
+
+    //Hive 데이터 넣기
     for (int i = 0; i < results.length; i++) {
+      // ItemCode
       final key = ItemCode.values[i];
+      // List<StatModel>
       final value = results[i];
-      stats.addAll({key: value});
+
+      final box = Hive.box<StatModel>(key.name);
+      for (StatModel stat in value) {
+        box.put(stat.dataTime.toString(), stat);
+      }
     }
-    return stats;
+    return ItemCode.values.fold<Map<ItemCode, List<StatModel>>>({},
+        (previousValue, itemCode) {
+      final box = Hive.box<StatModel>(itemCode.name);
+      previousValue.addAll(
+        {
+          itemCode: box.values.toList(),
+        },
+      );
+      return previousValue;
+    });
   }
 
   scrollListener() {
