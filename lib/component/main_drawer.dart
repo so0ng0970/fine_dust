@@ -3,13 +3,13 @@ import 'package:flutter/material.dart';
 
 typedef OnRegionTap = void Function(String region);
 
-class MainDrawerScreen extends StatelessWidget {
+class MainDrawer extends StatelessWidget {
   final OnRegionTap onRegionTap;
   final String selectedRegion;
   final Color darkColor;
   final Color lightColor;
 
-  const MainDrawerScreen({
+  const MainDrawer({
     required this.onRegionTap,
     required this.selectedRegion,
     required this.darkColor,

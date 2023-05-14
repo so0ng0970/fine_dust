@@ -1,7 +1,6 @@
 import 'package:fine_dust/component/card_title.dart';
 import 'package:fine_dust/component/main_card.dart';
 import 'package:fine_dust/component/main_stat.dart';
-import 'package:fine_dust/model/stat_and_status_model.dart';
 import 'package:fine_dust/utils/data_utils.dart';
 import 'package:flutter/material.dart';
 
@@ -9,9 +8,8 @@ class CategoryCard extends StatelessWidget {
   final String region;
   final Color darkColor;
   final Color lightColor;
-  final List<StatAndStatusModel> models;
+
   const CategoryCard({
-    required this.models,
     required this.region,
     required this.darkColor,
     required this.lightColor,
