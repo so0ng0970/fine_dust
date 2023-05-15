@@ -1,5 +1,5 @@
-import 'package:fine_dust/component/category_card.dart';
-import 'package:fine_dust/component/hourly_card.dart';
+import 'package:fine_dust/container/category_card.dart';
+import 'package:fine_dust/container/hourly_card.dart';
 import 'package:fine_dust/component/main_app_bar.dart';
 import 'package:fine_dust/component/main_drawer.dart';
 import 'package:fine_dust/const/regions.dart';
@@ -26,6 +26,8 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     scrollController.addListener(scrollListener);
+    fetchData();
+
     @override
     dispose() {
       scrollController.removeListener(scrollListener);
@@ -35,6 +37,22 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> fetchData() async {
+    final now = DateTime.now();
+    final fetchTime = DateTime(
+      now.year,
+      now.month,
+      now.day,
+      now.hour,
+    );
+
+    final box = Hive.box<StatModel>(ItemCode.PM10.name);
+    final recent = box.values.last;
+
+    if (recent.dataTime.isAtSameMomentAs(fetchTime)) {
+      print('이미 데이터 있음 ');
+      return;
+    }
+
     List<Future> futures = [];
 
     for (ItemCode itemCode in ItemCode.values) {
@@ -55,8 +73,15 @@ class _HomeScreenState extends State<HomeScreen> {
       final value = results[i];
 
       final box = Hive.box<StatModel>(key.name);
+
       for (StatModel stat in value) {
         box.put(stat.dataTime.toString(), stat);
+      }
+      final allKeys = box.keys.toList();
+      if (allKeys.length > 24) {
+        // start 시작 인덱스 , end - 끝 인덱스
+        final deleteKeys = allKeys.sublist(0, allKeys.length - 24);
+        box.deleteAll(deleteKeys);
       }
     }
   }
@@ -73,11 +98,11 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder<Box>(
-      valueListenable: Hive.box(ItemCode.PM10.name).listenable(),
+      valueListenable: Hive.box<StatModel>(ItemCode.PM10.name).listenable(),
       builder: (context, box, widget) {
         // PM10 (미세먼지)
         // box.value.toList().first
-        final recentStat = box.values.toList().first as StatModel;
+        final recentStat = box.values.toList().last as StatModel;
         // 미세먼지 최근 데이터의 현재 상태
         final status = DataUtils.getStatusFromItemCodeAndValue(
           itemCode: ItemCode.PM10,
